@@ -20,6 +20,11 @@
         .nav-link { font-weight: 600; color: #495057 !important; margin: 0 10px; }
         .nav-link.active { color: #0d6efd !important; border-bottom: 2px solid #0d6efd; }
 
+        /* ADDED: Mobile Menu fix to prevent border overlap */
+        @media (max-width: 991px) {
+            .nav-link { border-bottom: none !important; }
+        }
+
         .doctor-card {
             background: white;
             border-radius: 20px;
@@ -86,7 +91,12 @@
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container">
             <a class="navbar-brand" href="home.html">✚ Kampung Wawasan Clinic</a>
-            <div class="collapse navbar-collapse">
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="home.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link active" href="profiles.html">Doctor Profiles</a></li>

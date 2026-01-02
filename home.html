@@ -95,7 +95,7 @@
         <div class="row g-2 g-md-3 mb-4 text-white">
             <div class="col-6 col-md-2"><div class="summary-card"><small>TOTAL</small><span id="statTotal" class="summary-num">0</span></div></div>
             <div class="col-6 col-md-2"><div class="summary-card"><small>FEVER</small><span id="statFever" class="summary-num text-warning">0</span></div></div>
-            <div class="col-6 col-md-2"><div class="summary-card"><small>COUGH</small><span id="statCough" class="summary-num text-info">0</span></div></div>
+            <div class="col-6 col-md-2"><div class="summary-card"><small>FLU</small><span id="statCough" class="summary-num text-info">0</span></div></div>
             <div class="col-6 col-md-2"><div class="summary-card"><small>STOMACH</small><span id="statStomach" class="summary-num text-danger">0</span></div></div>
             <div class="col-6 col-md-2"><div class="summary-card"><small>DENTAL</small><span id="statDental" class="summary-num text-primary">0</span></div></div>
             <div class="col-6 col-md-2"><div class="summary-card"><small>COMPLETED</small><span id="statDone" class="summary-num text-success">0</span></div></div>
@@ -129,7 +129,7 @@
                             <div class="small text-muted" id="vDate">--</div>
                             <hr>
                             <h6 class="fw-bold mb-2 small text-secondary">MEDICAL HISTORY</h6>
-                            <div style="font-size: 11px;" id="historyTxt">General Checkup</div>
+                            <div style="font-size: 11px;" id="historyTxt">No previous history recorded.</div>
                         </div>
                     </div>
 
@@ -190,14 +190,20 @@
             const data = JSON.parse(localStorage.getItem('wawasan_clinic_data')) || [];
             const list = document.getElementById('pList');
             list.innerHTML = '';
-            let fever=0, cough=0, stomach=0, dental=0, done=0;
+            
+            // Statistics Counters
+            let fever=0, flu=0, stomach=0, dental=0, done=0;
 
             data.forEach((p, i) => {
                 let s = p.status || "Pending";
                 let sClass = s === "In Progress" ? "status-progress" : (s === "Completed" ? "status-completed" : "status-pending");
+                
+                // Count Statistics Based on Registration Keys
                 if (s === "Completed") done++;
-                if(p.sakit === "Fever") fever++; if(p.sakit === "Cough") cough++;
-                if(p.sakit === "Stomach Pain") stomach++; if(p.sakit === "Dental") dental++;
+                if (p.ill === "Fever") fever++; 
+                if (p.ill === "Flu") flu++;
+                if (p.ill === "Stomach Ache") stomach++; 
+                if (p.ill === "Dental") dental++;
 
                 list.innerHTML += `
                     <div class="p-card shadow-sm" onclick="runDiagnostics(${i})">
@@ -208,9 +214,10 @@
                         <div class="text-muted" style="font-size: 9px; margin-top: 4px;">ID: ${p.ic}</div>
                     </div>`;
             });
+
             document.getElementById('statTotal').innerText = data.length;
             document.getElementById('statFever').innerText = fever;
-            document.getElementById('statCough').innerText = cough;
+            document.getElementById('statCough').innerText = flu; // Displays Flu as "Cough/Flu"
             document.getElementById('statStomach').innerText = stomach;
             document.getElementById('statDental').innerText = dental;
             document.getElementById('statDone').innerText = done;
@@ -225,8 +232,9 @@
             
             document.getElementById('dispName').innerText = p.name;
             document.getElementById('dispIC').innerText = p.ic;
-            document.getElementById('vNextDr').innerText = p.doctor || "Unassigned";
+            document.getElementById('vNextDr').innerText = p.dr || "Unassigned"; // Matches 'dr' from registration
             document.getElementById('vDate').innerText = "Date: " + (p.date || "N/A");
+            document.getElementById('historyTxt').innerText = "Admitted for " + (p.ill || "Checkup");
 
             const status = p.status || "Pending";
             const statusEl = document.getElementById('dispStatus');
@@ -252,9 +260,9 @@
                 document.getElementById('diagnosticsLocked').style.display = "block";
             }
 
+            // Correct image logic for gender
             document.getElementById('bodyImg').src = (p.gender === "Female") ? "photo1.jpg.jfif" : "photo2.jpg.jfif";
             
-            // On mobile, auto-scroll down to the console when a patient is clicked
             if (window.innerWidth < 992) {
                 window.scrollTo({ top: document.getElementById('mainConsole').offsetTop - 70, behavior: 'smooth' });
             }
