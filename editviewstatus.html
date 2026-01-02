@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Status - Kampung Wawasan Clinic</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CONSISTENT FUTURISTIC BACKGROUND */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0d6efd 0%, #002244 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .navbar { background: white !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .navbar-brand { color: #0d6efd !important; font-weight: 700; font-family: 'Orbitron', sans-serif; }
+        .nav-link { font-weight: 600; color: #495057 !important; margin: 0 10px; }
+        .nav-link.active { color: #0d6efd !important; border-bottom: 2px solid #0d6efd; }
+
+        /* GLASSMORPHISM TABLE CONTAINER */
+        .main-container { 
+            background: rgba(255, 255, 255, 0.95); 
+            border-radius: 20px; 
+            padding: 2rem; 
+            margin: 2rem auto; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            width: 95%; 
+            max-width: 1200px; 
+        }
+
+        h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+
+        /* STATUS COLORS */
+        .status-pending { background-color: #f8f9fa !important; border: 1px solid #ddd; }
+        .status-progress { background-color: #fff3cd !important; border: 1px solid #ffe69c; color: #856404; font-weight: 600; }
+        .status-completed { background-color: #d1e7dd !important; border: 1px solid #a3cfbb; color: #0f5132 !important; font-weight: bold; }
+        
+        .row-completed { background-color: rgba(209, 231, 221, 0.3) !important; opacity: 0.8; }
+        
+        .table thead { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; color: #0d6efd; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">✚ Kampung Wawasan Clinic</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profiles.html">Doctor Profiles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="details.html">Patient Details</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="editviewstatus.html">Manage Status</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger fw-bold" href="index.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container flex-grow-1">
+        <div class="main-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-primary">APPOINTMENT COMMAND</h3>
+                <input type="text" id="searchBar" class="form-control w-25 shadow-sm" placeholder="Search ID or Name...">
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>PATIENT DETAIL</th>
+                            <th>SYMPTOMS</th>
+                            <th>ASSIGNED DOCTOR</th>
+                            <th>TYPE/DATE</th>
+                            <th>LIVE STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white py-3 border-top mt-auto text-center">
+        <p class="mb-0 text-muted small">&copy; 2026 Kampung Wawasan Clinic. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function renderTable() {
+            const tableBody = document.getElementById('appointmentTable');
+            const data = JSON.parse(localStorage.getItem('wawasan_clinic_data')) || [];
+            const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            tableBody.innerHTML = "";
+
+            // We use the array index (i) as the unique identifier
+            data.forEach((item, i) => {
+                if (item.name.toLowerCase().includes(searchTerm) || item.ic.includes(searchTerm)) {
+                    
+                    // Logic to define CSS based on status
+                    let statusClass = "status-pending";
+                    if (item.status === "In Progress") statusClass = "status-progress";
+                    if (item.status === "Completed") statusClass = "status-completed";
+
+                    tableBody.innerHTML += `
+                        <tr class="${item.status === 'Completed' ? 'row-completed' : ''}">
+                            <td><strong>${item.name}</strong><br><small class="text-muted">IC: ${item.ic}</small></td>
+                            <td><span class="badge bg-secondary opacity-75">${item.ill || 'General'}</span></td>
+                            <td><small class="fw-bold">${item.dr}</small></td>
+                            <td>
+                                <span class="badge ${item.appt === 'ASAP' ? 'bg-danger' : 'bg-info'}">${item.appt}</span>
+                                <br><small class="text-muted">${item.date}</small>
+                            </td>
+                            <td>
+                                <select onchange="updateStatus(${i}, this.value)" class="form-select form-select-sm ${statusClass}">
+                                    <option value="Pending" ${item.status === 'Pending' || !item.status ? 'selected' : ''}>Pending</option>
+                                    <option value="In Progress" ${item.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                                    <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button onclick="deleteRecord(${i})" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </td>
+                        </tr>`;
+                }
+            });
+        }
+
+        // Fixed: Use index (i) to update only 1 specific patient
+        function updateStatus(index, newStatus) {
+            let data = JSON.parse(localStorage.getItem('wawasan_clinic_data')) || [];
+            data[index].status = newStatus; // Update only the patient at this index
+            localStorage.setItem('wawasan_clinic_data', JSON.stringify(data));
+            renderTable(); // Refresh table
+        }
+
+        function deleteRecord(index) {
+            if(confirm("Permanently remove this patient record?")) {
+                let data = JSON.parse(localStorage.getItem('wawasan_clinic_data')) || [];
+                data.splice(index, 1); // Remove only the specific index
+                localStorage.setItem('wawasan_clinic_data', JSON.stringify(data));
+                renderTable();
+            }
+        }
+
+        document.getElementById('searchBar').addEventListener('input', renderTable);
+        window.onload = renderTable;
+    </script>
+</body>
+</html>

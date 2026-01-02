@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - Kampung Wawasan Clinic</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CONSISTENT FUTURISTIC BACKGROUND */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0d6efd 0%, #002244 100%); 
+            min-height: 100vh;
+        }
+
+        /* NAVIGATION STYLE */
+        .navbar { background-color: white !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .navbar-brand { color: #0d6efd !important; font-weight: 700; font-family: 'Orbitron', sans-serif; }
+        .nav-link { font-weight: 600; color: #495057 !important; margin: 0 10px; }
+        .nav-link.active { color: #0d6efd !important; border-bottom: 2px solid #0d6efd; }
+
+        /* GLASSMORPHISM REGISTRATION BOX */
+        .reg-box { 
+            background: rgba(255, 255, 255, 0.95); 
+            border-radius: 20px; 
+            padding: 40px; 
+            margin-top: 30px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        .form-label-tech { font-size: 11px; font-weight: 800; color: #0d6efd; text-transform: uppercase; margin-bottom: 5px; }
+        
+        .btn-primary {
+            background: #0d6efd;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background: #00d2ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,210,255,0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">✚ Kampung Wawasan Clinic</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="home.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profiles.html">Doctor Profiles</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="details.html">Patient Details</a></li>
+                    <li class="nav-item"><a class="nav-link" href="editviewstatus.html">Manage Status</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger fw-bold" href="index.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10 reg-box">
+                <h3 class="fw-bold mb-4 text-primary">PATIENT ENROLLMENT</h3>
+                <form id="regForm" class="row g-3">
+                    <div class="col-md-4"><label class="form-label-tech">Full Name</label><input type="text" id="nName" class="form-control" placeholder="Enter Full Name" required></div>
+                    <div class="col-md-4"><label class="form-label-tech">IC Number</label><input type="text" id="nIC" class="form-control" placeholder="Identity Card No." required></div>
+                    <div class="col-md-4"><label class="form-label-tech">Phone Number</label><input type="tel" id="nPhone" class="form-control" placeholder="Contact Number" required></div>
+                    
+                    <div class="col-md-4"><label class="form-label-tech">Gender</label>
+                        <select id="nGender" class="form-select">
+                            <option value="Male">Male</option><option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4"><label class="form-label-tech">Illness Category</label>
+                        <select id="nIll" class="form-select">
+                            <option value="Fever">Demam (Fever)</option>
+                            <option value="Flu">Selesema (Flu)</option>
+                            <option value="Stomach Ache">Sakit Perut (Stomach Ache)</option>
+                            <option value="Dental">Klinik Gigi (Dental)</option>
+                            <option value="Others">Lain-lain (Others)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4"><label class="form-label-tech">Assigned Doctor</label>
+                        <select id="nDr" class="form-select">
+                            <option value="Dr. Haziq (Senior Physician)">Dr. Haziq (Senior Physician)</option>
+                            <option value="Dr. Najwa (Pediatrician)">Dr. Najwa (Pediatrician)</option>
+                            <option value="Dr. Faraniza (Dentist)">Dr. Faraniza (Dentist)</option>
+                            <option value="Dr. Iman (General Surgeon)">Dr. Iman (General Surgeon)</option>
+                            <option value="Dr. Ween (Pharmacist)">Dr. Ween (Pharmacist)</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4"><label class="form-label-tech">Physiotherapy Dr.</label>
+                        <select id="nPhysio" class="form-select">
+                            <option value="Dr. Iman">Dr. Iman</option>
+                            <option value="Dr. Haziq">Dr. Haziq</option>
+                            <option value="Dr. Najwa">Dr. Najwa</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label-tech">Appointment Type</label>
+                        <select id="nAppt" class="form-select">
+                            <option value="ASAP">ASAP (Emergency)</option>
+                            <option value="Future">Future Appointment</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label-tech">Registration Date</label><input type="date" id="nDate" class="form-control" required></div>
+                    
+                    <div class="col-md-12 mt-4">
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">REGISTER PATIENT & INITIALIZE DIAGNOSTICS</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('regForm').onsubmit = function(e) {
+            e.preventDefault();
+            const p = {
+                name: document.getElementById('nName').value,
+                ic: document.getElementById('nIC').value,
+                phone: document.getElementById('nPhone').value,
+                gender: document.getElementById('nGender').value,
+                ill: document.getElementById('nIll').value,
+                dr: document.getElementById('nDr').value,
+                physio: document.getElementById('nPhysio').value,
+                appt: document.getElementById('nAppt').value,
+                date: document.getElementById('nDate').value
+            };
+            let data = JSON.parse(localStorage.getItem('wawasan_clinic_data')) || [];
+            data.push(p);
+            localStorage.setItem('wawasan_clinic_data', JSON.stringify(data));
+            window.location.href = "home.html"; 
+        };
+    </script>
+</body>
+</html>
